@@ -224,11 +224,11 @@ class Simulation(object):
             if (t + deltat / 5) > tlimit and flag == True:
                 if __name__ == "__main__":
                     #Simple text printout
-                    print "Stage %i burnout" % nstage
-                    print "Velocity (km/s): ",v/1000
-                    print "Angle (deg h): ",gamma*180/pi
-                    print "Range (km): ",Rearth*psi/1000
-                    print "Time (sec): ",t
+                    print("Stage %i burnout" % nstage)
+                    print("Velocity (km/s): ",v/1000)
+                    print("Angle (deg h): ",gamma*180/pi)
+                    print("Range (km): ",Rearth*psi/1000)
+                    print("Time (sec): ",t)
                 else:
                     #GUI printout
                     app.Results.StageVelocityResult[nstage].SetValue("%4.2f" % float(v/1000))
@@ -249,7 +249,7 @@ class Simulation(object):
     
         if t >= tEND:
             if __name__ == "__main__":
-                print "Simulation exceeded time limit."
+                print("Simulation exceeded time limit.")
             else:
                 dlg = wx.MessageDialog(self.parent,"Exceeded time limit, results are likely invalid.","Simulation error",wx.OK | wx.ICON_INFORMATION)
                 dlg.ShowModal()
@@ -259,9 +259,9 @@ class Simulation(object):
         #print "Done"
         if __name__ == "__main__":
             #print final results
-            print "Range (km): ",psi*Rearth/1000
-            print "Apogee (km): ",apogee/1000
-            print "Time to target (sec): ",t
+            print("Range (km): ",psi*Rearth/1000)
+            print("Apogee (km): ",apogee/1000)
+            print("Time to target (sec): ",t)
         else:
             #put results in frame
             app.Results.ApogeeResult.SetValue("%4.2f" % float(apogee/1000))
@@ -360,9 +360,9 @@ class Simulation(object):
         return degree * pi/180
         
 if __name__ == "__main__":
-    print "the simulation object"
-    print "using simple text interface, minimum energy trajectory"
-    print ""
+    print("the simulation object")
+    print("using simple text interface, minimum energy trajectory")
+    print("")
     sim = Simulation(None) #this simulation object has no parent
     sim.numstages = int(raw_input("Number of stages: "))
     for i in range(1,sim.numstages+1):
@@ -379,10 +379,10 @@ if __name__ == "__main__":
     sim.rvdiam = float(raw_input("Re-entry Diameter (m): "))
     sim.est_range = float(raw_input("Est range (km): "))*1000
     
-    print '\n'
+    print('\n')
     sim.trajectory = "Minimum Energy"
     results = sim.integrate(sim.trajectory)
-    print '\n'
+    print('\n')
     
     path = 'data.txt'
     outfile = open(path,'w')
@@ -410,7 +410,7 @@ if __name__ == "__main__":
             outfile.write('%.3f' % flat[i][n])
             outfile.write(',')
         outfile.write('\n')
-    print "Data written to '%s'" % path
+    print("Data written to '%s'" % path)
     outfile.close()
 else:
     import wx

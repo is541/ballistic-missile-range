@@ -30,18 +30,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 #required modules
-import wx, wx.adv
+import numpy, wx, wx.adv
 from plot import * #made wx.lib.plot local
-try:
-    import numarray as numpy
-except ImportError:
-    try:
-        import numarray as numpy
-    except ImportError:
-        try:
-            import numpy
-        except ImportError:
-                print "NumPy required for plotting"
 
 #standard modules
 import sys,os,string
@@ -304,7 +294,7 @@ class ParamsPanel(wx.Panel):
                 self.StageIspCtrl[i].SetValue(str(preset_data['Isp0'][i]))
                 self.StageThrustCtrl[i].SetValue(str(preset_data['thrust0'][i]))
         except KeyError:
-            print "missing param in presets.py"
+            print("missing param in presets.py")
 
         try:
             self.OnStageChoice(None,numstage_override=numstages)
@@ -380,7 +370,7 @@ class ParamsPanel(wx.Panel):
             app.Results.Layout()
             
         
-        except ValueError,e:    
+        except ValueError:
             #Validator should take care of this, but just in case.
             dlg = wx.MessageDialog(self,"Please make sure all fields are filled in.","Entry error",wx.OK | wx.ICON_INFORMATION)
             dlg.ShowModal()
@@ -616,7 +606,7 @@ class ResultsPanel(wx.Panel):
                     self.outfile.write(',')
                 self.outfile.write('\n')
 
-            print "Data written to '%s'" % path
+            print("Data written to '%s'" % path)
             self.outfile.close()
         #clean up
         dlg.Destroy()
@@ -725,11 +715,11 @@ class AdvancedPanel(wx.Panel):
             m0 = float(self.StageMassCtrl.GetValue()) #keep stage mass const
             fuelfraction = float(self.FuelFractionCtrl.GetValue())/100
             if fuelfraction > 1:
-                print "invalid fuel fraction, setting to maximum"
+                print("invalid fuel fraction, setting to maximum")
                 fuelfraction = .99*100
                 self.FuelFractionCtrl.SetValue("%.2f" % fuelfraction)
             if fuelfraction < 0:
-                print "invalid fuel fraction, setting to minimum"
+                print("invalid fuel fraction, setting to minimum")
                 fuelfraction = .01*100
                 self.FuelFractionCtrl.SetValue("%.2f" % fuelfraction)
             m_prop = fuelfraction*m0
@@ -787,16 +777,16 @@ class AdvancedPanel(wx.Panel):
             try:
                 dx = f*(x - oldx)/(f - oldf)
                 if abs(dx)<tolerance:
-                    print "solved, tolerance"
+                    print("solved, tolerance")
                     break
             except ZeroDivisionError:
-                print "solved, ZDE"
+                print("solved, ZDE")
                 break
             (oldx, x) = (x, x - dx)
             self.var_control.SetValue("%.2f" % x)
             (oldf, f) = (f, self.RunSim()-ans_est)
             run += 1 #increment run number
-            print "sec(%d): x=%s, f(x)=%s, oldx=%s, oldf=%s,\n" % (run,x,f,oldx,oldf)
+            print("sec(%d): x=%s, f(x)=%s, oldx=%s, oldf=%s,\n" % (run,x,f,oldx,oldf))
             self.Gauge.SetValue(run)
             self.AnswerControl.SetValue("%.2f" % x)
             self.RangeControl.SetValue("%.2f" % (f+ans_est))

@@ -1,5 +1,48 @@
-# ballistic-missile-range
+# Ballistic Missile Range Simulator – the new README.md
 
+## Installation on macOS
+
+Make sure you have Python 3.11 installed on your machine. You can check the version of your Python interpreter with:
+```
+python3 --version
+```
+One of the dependencies – wxPython – requires the `cmake` compiler to be present on your machine. Try:
+```
+clang --version
+```
+If (and only if) you get an error, install the Apple Developer Command Line Tools with:
+```
+xcode-select –install
+```
+
+Install the following Python packages:
+```
+pip3 install numpy
+pip3 install attrdict
+```
+Unfortunately, `attrdict` is not compatible with Python 3.11. We have to pefrom some manual fixes. The files below are trying to `import` from `collections` within their first 10 lines of code. Replace all `from collections import` statements with `from collections.abc import` in the following files:
+```
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/attrdict/mapping.py
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/attrdict/mixins.py
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/attrdict/merge.py
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/attrdict/default.py
+```
+Run the command below to install wxPython. Warning: This operation is computationally heavy and takes approximately 15 minutes!
+```
+pip3 install wxPython
+```
+Congratulations, you are all done now!
+
+## Running the simulator
+Go to the project folder and run the UI with:
+```
+python3 gui.py
+```
+
+# The original README.md (out of date)
 
 Simulates the flight of intercontinental ballistic missiles based on launch parameters.
 

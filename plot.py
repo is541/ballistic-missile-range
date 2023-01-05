@@ -91,20 +91,7 @@ Zooming controls with mouse (when enabled):
 import  string as _string
 import  time as _time
 import  wx
-
-
-try:
-    import numpy as numpy
-except ImportError:
-    msg= """
-    This module requires the Numeric or numarray module,
-    which could not be imported.  It probably is not installed
-    (it's not part of the standard Python distribution). See the
-    Scientific Python site (http://www.scipy.org) for information on
-    downloading source or binaries."""
-    raise ImportError, "numpy not found. \n" + msg
-
-
+import numpy as numpy
 
 #
 # Plotting classes...
@@ -123,7 +110,7 @@ class PolyPoints:
         self.attributes.update(self._attributes)
         for name, value in attr.items():   
             if name not in self._attributes.keys():
-                raise KeyError, "Style attribute incorrect. Should be one of %s" % self._attributes.keys()
+                raise Exception(KeyError, "Style attribute incorrect. Should be one of %s" % self._attributes.keys())
             self.attributes[name] = value
         
     def boundingBox(self):
@@ -334,7 +321,7 @@ class PlotGraphics:
         yLabel - label shown on y-axis
         """
         if type(objects) not in [list,tuple]:
-            raise TypeError, "objects argument should be list or tuple"
+            raise Exception(TypeError, "objects argument should be list or tuple")
         self.objects = objects
         self.title= title
         self.xLabel= xLabel
@@ -623,7 +610,7 @@ class PlotCanvas(wx.Window):
     def SetEnableZoom(self, value):
         """Set True to enable zooming."""
         if value not in [True,False]:
-            raise TypeError, "Value should be True or False"
+            raise Exception(TypeError, "Value should be True or False")
         self._zoomEnabled= value
 
     def GetEnableZoom(self):
@@ -633,7 +620,7 @@ class PlotCanvas(wx.Window):
     def SetEnableGrid(self, value):
         """Set True to enable grid."""
         if value not in [True,False,'Horizontal','Vertical']:
-            raise TypeError, "Value should be True, False, Horizontal or Vertical"
+            raise Exception(TypeError, "Value should be True, False, Horizontal or Vertical")
         self._gridEnabled= value
         self.Redraw()
 
@@ -644,7 +631,7 @@ class PlotCanvas(wx.Window):
     def SetEnableLegend(self, value):
         """Set True to enable legend."""
         if value not in [True,False]:
-            raise TypeError, "Value should be True or False"
+            raise Exception(TypeError, "Value should be True or False")
         self._legendEnabled= value 
         self.Redraw()
 
@@ -655,7 +642,7 @@ class PlotCanvas(wx.Window):
     def SetEnablePointLabel(self, value):
         """Set True to enable pointLabel."""
         if value not in [True,False]:
-            raise TypeError, "Value should be True or False"
+            raise Exception(TypeError, "Value should be True or False")
         self._pointLabelEnabled= value 
         self.Redraw()  #will erase existing pointLabel if present
         self.last_PointLabel = None
@@ -772,9 +759,9 @@ class PlotCanvas(wx.Window):
         """
         # check Axis is either tuple or none
         if type(xAxis) not in [type(None),tuple]:
-            raise TypeError, "xAxis should be None or (minX,maxX)"
+            raise Exception(TypeError, "xAxis should be None or (minX,maxX)")
         if type(yAxis) not in [type(None),tuple]:
-            raise TypeError, "yAxis should be None or (minY,maxY)"
+            raise Exception(TypeError, "yAxis should be None or (minY,maxY)")
              
         # check case for axis = (a,b) where a==b caused by improper zooms
         if xAxis != None:
@@ -1113,7 +1100,7 @@ class PlotCanvas(wx.Window):
                 pnt2= (trhc[0]+legendLHS+legendSymExt[0], trhc[1]+s+lineHeight/2.)
                 o.draw(dc, self.printerScale, coord= numpy.array([pnt1,pnt2]))
             else:
-                raise TypeError, "object is neither PolyMarker or PolyLine instance"
+                raise Exception(TypeError, "object is neither PolyMarker or PolyLine instance")
             # draw legend txt
             pnt= (trhc[0]+legendLHS+legendSymExt[0], trhc[1]+s+lineHeight/2.-legendTextExt[1]/2)
             dc.DrawText(o.getLegend(),pnt[0],pnt[1])
@@ -1224,7 +1211,7 @@ class PlotCanvas(wx.Window):
             else:
                 return upper, lower
         else:
-            raise ValueError, str(spec) + ': illegal axis specification'
+            raise Exception(ValueError, str(spec) + ': illegal axis specification')
 
     def _drawAxes(self, dc, p1, p2, scale, shift, xticks, yticks):
         
@@ -1294,10 +1281,10 @@ class PlotCanvas(wx.Window):
             format = '%+7.1e'        
         elif power >= 0:
             digits = max(1, int(power))
-            format = '%' + `digits`+'.0f'
+            format = '%' + repr(digits)+'.0f'
         else:
             digits = -int(power)
-            format = '%'+`digits+2`+'.'+`digits`+'f'
+            format = '%'+ repr(digits+2)+'.'+repr(digits)+'f'
         ticks = []
         t = -grid*numpy.floor(-lower/grid)
         while t <= upper:
