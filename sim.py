@@ -397,14 +397,14 @@ if __name__ == "__main__":
                 outfile.write("dM/dt: " + str(sim.dMdt[i]) + '\n')
                 
     outfile.write("\nTIME,HEIGHT,VELOCITY,MASS,THRUST,DRAG,GAMMA,RANGE\n")
-    flat = zip(results['Time'],
+    flat = list(zip(results['Time'],
                 results['Height'],
                 results['Velocity'],
                 results['Mass'],
                 results['Thrust'],
                 results['Drag'],
                 results['Gamma'],
-                results['Range'])
+                results['Range']))
     for i in range(1,len(flat)):
         for n in range(0,len(flat[i])):
             outfile.write('%.3f' % flat[i][n])

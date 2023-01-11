@@ -562,7 +562,7 @@ class ResultsPanel(wx.Panel):
             y_data = self.data[y] #for others, don't add units
         
         #plot trajectory line
-        line = numpy.array(zip(x_data,y_data))
+        line = numpy.array(list(zip(x_data,y_data)))
         plot.append(PolyLine(line,legend=x,colour='green'))
         
         self.frame.canvas.Draw(PlotGraphics(plot,title,x,y))
@@ -591,13 +591,13 @@ class ResultsPanel(wx.Panel):
             
             self.outfile.write("\nTIME,HEIGHT,VELOCITY,THRUST,DRAG,GAMMA,RANGE\n")
             
-            flat = zip(self.data['Time'],
+            flat = list(zip(self.data['Time'],
                     self.data['Height'],
                     self.data['Velocity'],
                     self.data['Thrust'],
                     self.data['Drag'],
                     self.data['Gamma'],
-                    self.data['Range'])
+                    self.data['Range']))
             #create flat list
                     
             for i in range(1,len(flat)):
