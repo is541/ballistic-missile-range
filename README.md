@@ -1,6 +1,40 @@
 # Ballistic Missile Range Simulator – the new README.md
 
-## Installation on macOS
+## Installation of the GUI on macOS using Anaconda (recommended)
+
+Install Miniconda (or the full Anaconda distribution):
+
+```
+https://docs.conda.io/en/latest/miniconda.html
+```
+
+Create a new environment with Python version 3.10. If you are not familiar with Anaconda environments, follow this tutorial:
+
+```
+https://www.youtube.com/watch?v=YJC6ldI3hWk
+```
+
+Install the wxPython package:
+
+```
+conda install wxPython
+```
+
+This should install the “pythonw” executable. Unfortunately, in Anaconda environments, GUI apps can’t be executed with the usual “python” executable, we need to use “pythonw”. Make sure the “pythonw” executable is visible in your path:
+
+```
+where pythonw
+```
+
+Should give you a proper path and not return an error. Now you should be able to run the app with:
+
+```
+pythonw gui.py
+```
+
+To debug the app using Visual Studio Code, change the Python interpreter from “python” to “pythonw”.
+
+## Installation of the GUI on macOS using the default Python distribution
 
 Make sure you have Python 3.11 installed on your machine. You can check the version of your Python interpreter with:
 ```
