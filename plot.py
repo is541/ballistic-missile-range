@@ -114,7 +114,7 @@ class PolyPoints:
             self.attributes[name] = value
         
     def boundingBox(self):
-        if len(self.points) == 0:
+        if self.points.shape[0] == 0:
             # no curves to draw
             # defaults to (-1,-1) and (1,1) but axis can be set in Draw
             minXY= numpy.array([-1,-1])
@@ -125,7 +125,7 @@ class PolyPoints:
         return minXY, maxXY
 
     def scaleAndShift(self, scale=(1,1), shift=(0,0)):
-        if len(self.points) == 0:
+        if self.points.shape[0] == 0:
             # no curves to draw
             return
         if (scale is not self.currentScale) or (shift is not self.currentShift):
@@ -189,9 +189,16 @@ class PolyLine(PolyPoints):
         pen.SetCap(wx.CAP_BUTT)
         dc.SetPen(pen)
         if coord == None:
-            dc.DrawLines(self.scaled)
+            dc.DrawLines(self.getPlotPoints(self.scaled))
         else:
             dc.DrawLines(coord) # draw legend line
+
+    def getPlotPoints(self, nda: numpy.ndarray) -> list[wx.Point]:
+        points: list[wx.Point] = []
+        for ndPoint in nda:
+            points.append(wx.Point(round(ndPoint[0]),round(ndPoint[1])))
+
+        return points
 
     def getSymExtent(self, printerScale):
         """Width and Height of Marker"""
@@ -835,15 +842,15 @@ class PlotCanvas(wx.Window):
         dc.SetFont(self._getFont(self._fontSizeTitle))
         titlePos= (self.plotbox_origin[0]+ lhsW + (self.plotbox_size[0]-lhsW-rhsW)/2.- titleWH[0]/2.,
                  self.plotbox_origin[1]- self.plotbox_size[1])
-        dc.DrawText(graphics.getTitle(),titlePos[0],titlePos[1])
+        dc.DrawText(graphics.getTitle(), round(titlePos[0]), round(titlePos[1]))
         dc.SetFont(self._getFont(self._fontSizeAxis))
         xLabelPos= (self.plotbox_origin[0]+ lhsW + (self.plotbox_size[0]-lhsW-rhsW)/2.- xLabelWH[0]/2.,
                  self.plotbox_origin[1]- xLabelWH[1])
-        dc.DrawText(graphics.getXLabel(),xLabelPos[0],xLabelPos[1])
+        dc.DrawText(graphics.getXLabel(), round(xLabelPos[0]), round(xLabelPos[1]))
         yLabelPos= (self.plotbox_origin[0],
                  self.plotbox_origin[1]- bottomH- (self.plotbox_size[1]-bottomH-topH)/2.+ yLabelWH[0]/2.)
         if graphics.getYLabel():  # bug fix for Linux
-            dc.DrawRotatedText(graphics.getYLabel(),yLabelPos[0],yLabelPos[1],90)
+            dc.DrawRotatedText(graphics.getYLabel(), round(yLabelPos[0]), round(yLabelPos[1]), 90)
 
         # drawing legend makers and text
         if self._legendEnabled:
@@ -861,7 +868,7 @@ class PlotCanvas(wx.Window):
         
         # set clipping area so drawing does not occur outside axis box
         ptx,pty,rectWidth,rectHeight= self._point2ClientCoord(p1, p2)
-        dc.SetClippingRegion(ptx,pty,rectWidth,rectHeight)
+        dc.SetClippingRegion(round(ptx), round(pty), round(rectWidth), round(rectHeight))
         # Draw the lines and markers
         #start = _time.clock()
         graphics.draw(dc)
@@ -1240,12 +1247,12 @@ class PlotCanvas(wx.Window):
             for y, d in [(p1[1], -xTickLength), (p2[1], xTickLength)]:   # miny, maxy and tick lengths
                 a1 = scale*numpy.array([lower, y])+shift
                 a2 = scale*numpy.array([upper, y])+shift
-                dc.DrawLine(a1[0],a1[1],a2[0],a2[1])  # draws upper and lower axis line
+                dc.DrawLine(round(a1[0]), round(a1[1]), round(a2[0]), round(a2[1]))  # draws upper and lower axis line
                 for x, label in xticks:
                     pt = scale*numpy.array([x, y])+shift
-                    dc.DrawLine(pt[0],pt[1],pt[0],pt[1] + d) # draws tick mark d units
+                    dc.DrawLine(round(pt[0]), round(pt[1]), round(pt[0]), round(pt[1] + d)) # draws tick mark d units
                     if text:
-                        dc.DrawText(label,pt[0],pt[1])
+                        dc.DrawText(label, round(pt[0]), round(pt[1]))
                 text = 0  # axis values not drawn on top side
 
         if self._ySpec is not 'none':
@@ -1255,13 +1262,12 @@ class PlotCanvas(wx.Window):
             for x, d in [(p1[0], -yTickLength), (p2[0], yTickLength)]:
                 a1 = scale*numpy.array([x, lower])+shift
                 a2 = scale*numpy.array([x, upper])+shift
-                dc.DrawLine(a1[0],a1[1],a2[0],a2[1])
+                dc.DrawLine(round(a1[0]), round(a1[1]), round(a2[0]), round(a2[1]))
                 for y, label in yticks:
                     pt = scale*numpy.array([x, y])+shift
-                    dc.DrawLine(pt[0],pt[1],pt[0]-d,pt[1])
+                    dc.DrawLine(round(pt[0]), round(pt[1]), round(pt[0] - d), round(pt[1]))
                     if text:
-                        dc.DrawText(label,pt[0]-dc.GetTextExtent(label)[0],
-                                    pt[1]-0.5*h)
+                        dc.DrawText(label, round(pt[0] - dc.GetTextExtent(label)[0]), round(pt[1] - 0.5 * h))
                 text = 0    # axis values not drawn on right side
 
     def _ticks(self, lower, upper):
