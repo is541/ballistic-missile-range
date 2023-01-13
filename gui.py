@@ -572,7 +572,7 @@ class ResultsPanel(wx.Panel):
     def OnWriteToFile(self,event):
     
         dlg = wx.FileDialog(self, message="Save file as ...", defaultDir=os.getcwd(), 
-            defaultFile="data", style=wx.SAVE)
+            defaultFile="data", style=wx.FD_SAVE)
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             self.outfile = open(path,'w')
